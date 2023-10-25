@@ -25,7 +25,7 @@ class PostRepository:
 
     @staticmethod
     def update_post(post_id, updated_data):
-        post = Post.query.get(post_id)
+        post = Post.query.options(joinedload(Post.user)).get(post_id)
         if not post:
             return None
         post.title = updated_data.get('title', post.title)
@@ -35,7 +35,7 @@ class PostRepository:
 
     @staticmethod
     def delete_post(post_id):
-        post = Post.query.get(post_id)
+        post = Post.query.options(joinedload(Post.user)).get(post_id)
         if not post:
             return None
         db.session.delete(post)
