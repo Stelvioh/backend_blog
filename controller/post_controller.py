@@ -8,14 +8,23 @@ class PostController:
     @blueprint.route('/', methods=['GET'])
     def get_all_posts():
         post_dto_list = post_service.PostService.get_all_posts()
-        return jsonify([post_dto.__dict__ for post_dto in post_dto_list])
+        return jsonify([{
+            **post_dto.__dict__,
+            "user": post_dto.user.__dict__ if post_dto.user else None
+        } for post_dto in post_dto_list])
 
     @staticmethod
     @blueprint.route('/', methods=['POST'])
     def create_post():
         post_data = request.get_json()
         post_dto = post_service.PostService.create_post(post_data)
-        return jsonify(post_dto.__dict__), 201
+        if not post_dto:
+            return jsonify({"message": "Error creating post"}), 400
+        post_representation = {
+            **post_dto.__dict__,
+            "user": post_dto.user.__dict__ if post_dto.user else None
+        }
+        return jsonify(post_representation), 201
 
     @staticmethod
     @blueprint.route('/<int:post_id>/', methods=['PUT'])

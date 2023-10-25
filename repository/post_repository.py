@@ -1,6 +1,7 @@
 from database import db
 from domain.post import Post
 from flask import abort, make_response, jsonify
+from sqlalchemy.orm import joinedload
 from sqlalchemy import exc
 
 class PostRepository:
@@ -16,11 +17,11 @@ class PostRepository:
 
     @staticmethod
     def get_all_posts():
-        return Post.query.all()
+        return Post.query.options(joinedload(Post.user)).all()
 
     @staticmethod
     def get_post_by_id(post_id):
-        return Post.query.get(post_id)
+        return Post.query.options(joinedload(Post.user)).get(post_id)
 
     @staticmethod
     def update_post(post_id, updated_data):
@@ -43,4 +44,4 @@ class PostRepository:
 
     @staticmethod
     def get_posts_by_user(user_id):
-        return Post.query.filter_by(user_id=user_id).all()
+        return Post.query.filter_by(user_id=user_id).options(joinedload(Post.user)).all()
