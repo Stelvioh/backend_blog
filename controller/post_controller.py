@@ -30,15 +30,20 @@ class PostController:
     @blueprint.route('/<int:post_id>/', methods=['PUT'])
     def update_post(post_id):
         post_data = request.get_json()
-        updated_post = post_service.PostService.update_post(post_id, post_data)
-        if not updated_post:
+        updated_post_dto = post_service.PostService.update_post(post_id, post_data)
+        if not updated_post_dto:
             return jsonify({"message": "Post not found"}), 404
-        return jsonify(updated_post.__dict__), 200
+        updated_post_representation = {
+            **updated_post_dto.__dict__,
+            "user": updated_post_dto.user.__dict__ if updated_post_dto.user else None
+        }
+        return jsonify(updated_post_representation), 200
 
     @staticmethod
     @blueprint.route('/<int:post_id>/', methods=['DELETE'])
     def delete_post(post_id):
-        deleted_post = post_service.PostService.delete_post(post_id)
-        if not deleted_post:
+        deleted = post_service.PostService.delete_post(post_id)
+        if not deleted:
             return jsonify({"message": "Post not found"}), 404
-        return jsonify(deleted_post.__dict__), 200
+        return jsonify({"message": "Post successfully deleted"}), 200
+
