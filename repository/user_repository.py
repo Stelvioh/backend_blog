@@ -2,6 +2,8 @@ from flask import abort, make_response, jsonify
 from domain.user import User
 from app import db
 from sqlalchemy import exc
+from werkzeug.security import check_password_hash, generate_password_hash
+
 
 class UserRepository:
 
@@ -36,3 +38,16 @@ class UserRepository:
         db.session.delete(user)
         db.session.commit()
         return user
+    
+    @staticmethod
+    def get_user_by_email(email):
+        return User.query.filter_by(email=email).first()
+
+    @staticmethod
+    def verify_password(stored_password, provided_password):
+        return check_password_hash(stored_password, provided_password)
+
+    @staticmethod
+    def set_password(user, password):
+        user.password = generate_password_hash(password)
+        db.session.commit()
