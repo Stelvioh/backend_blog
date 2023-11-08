@@ -6,7 +6,6 @@ from database import db
 from config import Config
 import controller.user_controller as controller_user
 import controller.post_controller as controller_post
-import controller.auth_controller as controller_auth
 
 def create_app():
     app = Flask(__name__)
@@ -20,7 +19,6 @@ def create_app():
     
     app.register_blueprint(controller_user.UserController.blueprint)
     app.register_blueprint(controller_post.PostController.blueprint)
-    app.register_blueprint(controller_auth.AuthController.blueprint)
 
     with app.app_context():
         db.create_all()    

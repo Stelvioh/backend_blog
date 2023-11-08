@@ -33,3 +33,15 @@ class UserController:
         if not deleted_user:
             return jsonify({"message": "User not found"}), 404
         return jsonify(deleted_user.__dict__), 200
+    
+    @staticmethod
+    @blueprint.route('/login', methods=['POST'])
+    def login():
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+        token = service.UserService.authenticate(email, password)
+        
+        if token:
+            return jsonify({"message": "Login successful", "token": token}), 200 #token.decode('utf-8')}), 200
+        return jsonify({"message": "Invalid email or password"}), 401
