@@ -41,8 +41,8 @@ class UserService:
     def authenticate(email, password):
         user = UserRepository.get_user_by_email(email)
         if user and UserRepository.verify_password(user.password, password): 
-            return UserService.generate_token(user.user_id)
-        return None
+            return user, UserService.generate_token(user.user_id) # return user e token
+        return None, None
 
     @staticmethod
     def generate_token(user_id):
