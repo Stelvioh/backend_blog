@@ -43,5 +43,5 @@ class UserController:
         user, token = service.UserService.authenticate(email, password)
         
         if token:
-            return jsonify({"message": "Login successful", "token": token, "user_id": user.user_id}), 200 #token.decode('utf-8')}), 200
+            return jsonify({"message": "Login successful", "token": token, "user_id": user.user_id}), 200
         return jsonify({"message": "Invalid email or password"}), 401
